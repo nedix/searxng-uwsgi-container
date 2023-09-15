@@ -36,9 +36,9 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          build-args: TARGET=app
           platforms: linux/amd64,linux/arm64
           push: true
+          target: app
           tags: |
             ghcr.io/${{ github.repository }}:${{ steps.digests.outputs.DIGEST }}
             ghcr.io/${{ github.repository }}:searxng-${{ steps.digests.outputs.SEARXNG_DIGEST }}
