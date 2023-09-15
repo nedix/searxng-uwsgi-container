@@ -6,7 +6,7 @@ ARG CYPRESS_VERSION=13.2.0
 FROM python:${PYTHON_VERSION}-alpine3.17 as target_app
 
 ARG SEARXNG_REPO=https://github.com/searxng/searxng.git
-ARG SEARXNG_VERSION=f182abd6f8f1eac20d19c3e4b4c9800115f2a705
+ARG SEARXNG_VERSION=ec540a967a66156baa06797183cc64c4a3e345be
 ARG SEARXNG_PATH=/usr/local/searxng
 
 RUN apk add --virtual .build-deps \
