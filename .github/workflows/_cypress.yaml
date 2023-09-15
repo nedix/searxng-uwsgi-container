@@ -1,0 +1,43 @@
+name: Cypress e2e testing
+
+on:
+  workflow_call:
+
+jobs:
+  cypress:
+    runs-on: ubuntu-latest
+    services:
+      registry:
+        image: registry:2
+        ports:
+          - 5000:5000
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build app image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          build-args: |
+            TARGET=app
+          tags: |
+            localhost:5000/app
+
+      - name: Build test image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          build-args: |
+            TARGET=testing
+          tags: |
+            localhost:5000/cypress
+
+      - name: Run tests
+        run: |
+          docker network create test-network
+          docker run --rm --net test-network --name searx -d localhost:5000/app
+          docker run --rm --net test-network --name searx-test localhost:5000/cypress run

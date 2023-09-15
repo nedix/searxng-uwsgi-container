@@ -1,0 +1,27 @@
+{
+  baseBranches: [
+    "main",
+    "/^release\\/.*/",
+  ],
+  enabledManagers: [
+    "regex",
+  ],
+  regexManagers: [
+    {
+      fileMatch: ["^Dockerfile$"],
+      matchStrings: ["ARG SEARXNG_VERSION=(?<currentDigest>.*?)\\n"],
+      datasourceTemplate: "git-refs",
+      depNameTemplate: "searxng",
+      packageNameTemplate: "https://github.com/searxng/searxng",
+      versioningTemplate: "git",
+      currentValueTemplate: "master",
+    },
+    {
+      fileMatch: ["^Dockerfile$"],
+      matchStrings: ["ARG CYPRESS_VERSION=(?<currentValue>.*?)\\n"],
+      datasourceTemplate: "docker",
+      depNameTemplate: "cypress",
+      packageNameTemplate: "cypress/included",
+    }
+  ]
+}
