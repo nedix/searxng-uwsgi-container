@@ -13,7 +13,7 @@ test: spec =
 test:
 	@make test-setup
 	@docker run --rm --net searx-test --name searx -d searx
-	@-docker run --rm --net searx-test --name searx-test -v ${CURDIR}/tests/e2e/artifacts/:/tests/e2e/artifacts/ searx-test run $(if ${spec},"--spec=integration/${spec}",)
+	@-docker run --rm --net searx-test --name searx-test -v ${CURDIR}/tests/e2e/artifacts/:/tests/e2e/artifacts/ searx-test run --browser electron $(if ${spec},"--spec=integration/${spec}",)
 	@make down
 
 test-native:
@@ -35,5 +35,5 @@ test-setup:
 test-update:
 	@make test-setup
 	@docker run --rm --net searx-test --name searx -d searx
-	@-docker run --rm --net searx-test --name searx-test -v ${CURDIR}/tests/e2e/snapshots/:/tests/e2e/snapshots searx-test run --env updateSnapshots=true
+	@-docker run --rm --net searx-test --name searx-test -v ${CURDIR}/tests/e2e/snapshots/:/tests/e2e/snapshots searx-test run --browser electron --env updateSnapshots=true
 	@make down

@@ -44,7 +44,14 @@ jobs:
         run: |
           docker network create test-network
           docker run --rm --net test-network --name searx -d localhost:5000/app
-          docker run --rm --net test-network --name searx-test -v ${PWD}/tests/e2e/artifacts/:/tests/e2e/artifacts/ localhost:5000/cypress run --reporter junit --reporter-options "mochaFile=artifacts/reports/junit-[hash].xml"
+          docker run --rm --net test-network --name searx-test -v ${PWD}/tests/e2e/artifacts/:/tests/e2e/artifacts/ localhost:5000/cypress run --browser electron --reporter junit --reporter-options "mochaFile=artifacts/reports/junit-[hash].xml"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          path: |
+            tests/e2e/artifacts
+        if: failure()
 
       - name: Report test results
         uses: dorny/test-reporter@v1
@@ -53,10 +60,3 @@ jobs:
           path: tests/e2e/artifacts/reports/junit-*.xml
           reporter: java-junit
         if: success() || failure()
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          path: |
-            tests/e2e/artifacts
-        if: failure()
