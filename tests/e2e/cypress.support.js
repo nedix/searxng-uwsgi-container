@@ -1,4 +1,5 @@
 const { addMatchImageSnapshotCommand } = require('@simonsmith/cypress-image-snapshot/command');
+const installLogsCollector = require('cypress-terminal-report/src/installLogsCollector');
 
 addMatchImageSnapshotCommand({
   comparisonMethod: 'ssim',
@@ -8,3 +9,5 @@ addMatchImageSnapshotCommand({
   failureThreshold: 0.2,
   failureThresholdType: 'percent',
 });
+
+installLogsCollector();
