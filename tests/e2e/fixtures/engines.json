@@ -1,0 +1,37 @@
+{
+  "general": [
+    "qwant",
+    "startpage",
+    "yahoo"
+  ],
+  "images": [
+    "bing images",
+    "brave.images",
+    "deviantart",
+    "qwant images",
+    "wikicommons.images"
+  ],
+  "videos": [
+    "bing videos",
+    "brave.videos",
+    "invidious",
+    "peertube",
+    "piped",
+    "rumble"
+  ],
+  "map": [
+    "openstreetmap"
+  ],
+  "science": [
+    "arxiv",
+    "pubmed",
+    "semantic scholar"
+  ],
+  "files": [
+    "1337x",
+    "annas archive",
+    "bt4g",
+    "library genesis"
+  ],
+  "other": []
+}
