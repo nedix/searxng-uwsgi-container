@@ -1,9 +1,12 @@
 ARG ADVANCED_THEME_VERSION=0.1.3
+ARG ALPINE_VERSION=3.18
+ARG CYPRESS_IMAGE_SNAPSHOT_VERSION=8.1.2
+ARG CYPRESS_TERMINAL_REPORT_VERSION=5.3.6
 ARG CYPRESS_VERSION=13.2.0
-ARG PYTHON_VERSION=3.10
-ARG SEARXNG_VERSION=ec540a967a66156baa06797183cc64c4a3e345be
+ARG PYTHON_VERSION=3.11
+ARG SEARXNG_VERSION=f182abd6f8f1eac20d19c3e4b4c9800115f2a705
 
-FROM python:${PYTHON_VERSION}-alpine3.17 as app
+FROM python:${PYTHON_VERSION}-alpine${ALPINE_VERSION} as app
 
 ARG SEARXNG_PATH=/usr/local/searxng
 ARG SEARXNG_REPO=https://github.com/searxng/searxng.git
@@ -31,7 +34,7 @@ RUN git clone "$ADVANCED_THEME_REPO" "$ADVANCED_THEME_PATH" \
         "${ADVANCED_THEME_PATH}/.git" \
     && apk del .build-deps
 
-ADD rootfs /
+COPY --link rootfs /
 
 RUN chown -R nobody \
         "$SEARXNG_PATH" \
@@ -46,15 +49,20 @@ ENTRYPOINT ["/entrypoint.sh"]
 
 FROM cypress/included:${CYPRESS_VERSION} as cypress
 
+ARG CYPRESS_IMAGE_SNAPSHOT_VERSION
+ARG CYPRESS_TERMINAL_REPORT_VERSION
+
 RUN npm install -g \
-        @simonsmith/cypress-image-snapshot
+        "@simonsmith/cypress-image-snapshot@${CYPRESS_IMAGE_SNAPSHOT_VERSION}" \
+        "cypress-terminal-report@${CYPRESS_TERMINAL_REPORT_VERSION}"
 
 COPY tests/e2e /tests/e2e
 
 WORKDIR /tests/e2e
 
 RUN npm link \
-        @simonsmith/cypress-image-snapshot
+        @simonsmith/cypress-image-snapshot \
+        cypress-terminal-report
 
 ENV CYPRESS_BASE_URL=http://searx:1234
 
