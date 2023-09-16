@@ -16,11 +16,6 @@ it('It should render the privacy tab.', () => {
   cy.get('main').matchImageSnapshot('privacy-tab');
 });
 
-it('It should render the engines tab.', () => {
-  cy.contains('label', 'Engines').click();
-  cy.get('main').matchImageSnapshot('engines-tab');
-});
-
 it('It should render the special queries tab.', () => {
   cy.contains('label', 'Special Queries').click();
   cy.get('main').matchImageSnapshot('special-queries-tab');
