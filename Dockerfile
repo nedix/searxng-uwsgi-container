@@ -1,5 +1,6 @@
 ARG ADVANCED_THEME_VERSION=0.1.3
 ARG ALPINE_VERSION=3.18
+ARG CYPRESS_IMAGE_SNAPSHOT_VERSION=8.1.2
 ARG CYPRESS_VERSION=13.2.0
 ARG PYTHON_VERSION=3.11
 ARG SEARXNG_VERSION=f182abd6f8f1eac20d19c3e4b4c9800115f2a705
@@ -32,7 +33,7 @@ RUN git clone "$ADVANCED_THEME_REPO" "$ADVANCED_THEME_PATH" \
         "${ADVANCED_THEME_PATH}/.git" \
     && apk del .build-deps
 
-ADD rootfs /
+COPY --link rootfs /
 
 RUN chown -R nobody \
         "$SEARXNG_PATH" \
@@ -47,8 +48,10 @@ ENTRYPOINT ["/entrypoint.sh"]
 
 FROM cypress/included:${CYPRESS_VERSION} as cypress
 
+ARG CYPRESS_IMAGE_SNAPSHOT_VERSION
+
 RUN npm install -g \
-        @simonsmith/cypress-image-snapshot
+        "@simonsmith/cypress-image-snapshot@${CYPRESS_IMAGE_SNAPSHOT_VERSION}"
 
 COPY tests/e2e /tests/e2e
 
