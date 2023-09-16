@@ -8,9 +8,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Extract ref
+        id: extract-ref
+        run: echo "ref=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
+          ref: ${{ steps.extract-ref.outputs.ref }}
           fetch-depth: 50
 
       - name: Set up QEMU
