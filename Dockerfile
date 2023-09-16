@@ -1,6 +1,7 @@
 ARG ADVANCED_THEME_VERSION=0.1.3
 ARG ALPINE_VERSION=3.18
 ARG CYPRESS_IMAGE_SNAPSHOT_VERSION=8.1.2
+ARG CYPRESS_TERMINAL_REPORT_VERSION=5.3.6
 ARG CYPRESS_VERSION=13.2.0
 ARG PYTHON_VERSION=3.11
 ARG SEARXNG_VERSION=f182abd6f8f1eac20d19c3e4b4c9800115f2a705
@@ -49,16 +50,19 @@ ENTRYPOINT ["/entrypoint.sh"]
 FROM cypress/included:${CYPRESS_VERSION} as cypress
 
 ARG CYPRESS_IMAGE_SNAPSHOT_VERSION
+ARG CYPRESS_TERMINAL_REPORT_VERSION
 
 RUN npm install -g \
-        "@simonsmith/cypress-image-snapshot@${CYPRESS_IMAGE_SNAPSHOT_VERSION}"
+        "@simonsmith/cypress-image-snapshot@${CYPRESS_IMAGE_SNAPSHOT_VERSION}" \
+        "cypress-terminal-report@${CYPRESS_TERMINAL_REPORT_VERSION}"
 
 COPY tests/e2e /tests/e2e
 
 WORKDIR /tests/e2e
 
 RUN npm link \
-        @simonsmith/cypress-image-snapshot
+        @simonsmith/cypress-image-snapshot \
+        cypress-terminal-report
 
 ENV CYPRESS_BASE_URL=http://searx:1234
 
