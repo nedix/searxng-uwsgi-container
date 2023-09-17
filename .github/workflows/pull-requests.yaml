@@ -35,6 +35,6 @@ jobs:
           repositories: ${{ toJSON(github.repository) }}
 
       - name: Dispatch Renovate workflow
-        run: gh workflow run _renovate.yaml -f RENOVATE_BRANCH_NAME=${GITHUB_HEAD_REF}
+        run: gh workflow run _renovate.yaml -f RENOVATE_BRANCH_NAME=${{ steps.extract-ref.outputs.ref }}
         env:
           GITHUB_TOKEN: ${{ steps.renovate-app-token.outputs.token }}
