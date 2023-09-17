@@ -7,3 +7,4 @@ on:
 jobs:
   renovate:
     uses: ./.github/workflows/_renovate.yaml
+    secrets: inherit
