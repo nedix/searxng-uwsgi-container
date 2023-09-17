@@ -6,11 +6,11 @@ down:
 	@-docker stop searx-test
 
 shell:
-	@docker run --rm -it --entrypoint /bin/sh searx
+	@docker exec searx
 
 setup:
 	@-make down
-	@docker build . -t searx --target app
+	@docker build . -t searx --progress plain --target app
 
 test: spec =
 test:
@@ -39,4 +39,4 @@ test-update:
 	@make test-setup
 	@docker run --rm --net searx-test --name searx -d searx
 	@-docker run --rm --net searx-test --name searx-test -v $(CURDIR)/tests/e2e/snapshots/:/tests/e2e/snapshots searx-test run --browser firefox --env updateSnapshots=true
-	@#-make down
+	@-make down

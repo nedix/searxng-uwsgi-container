@@ -77,7 +77,7 @@ RUN test -n "$ARCHITECTURE" || case $(uname -m) in \
     && echo "deb http://deb.debian.org/debian stable main" > /etc/apt/sources.list \
     && echo "deb http://deb.debian.org/debian unstable main" >> /etc/apt/sources.list \
     && apt update \
-    && apt install -y -t stable $BUILD_DEPS \
+    && apt install -t stable -y $BUILD_DEPS \
     && FIREFOX_INFO=$(curl -s "https://snapshot.debian.org/mr/binary/firefox/${FIREFOX_VERSION}/binfiles?fileinfo=1" \
         | jq -r '.fileinfo as $fileinfo | .result[] | select(.architecture == "'"$ARCHITECTURE"'") | .hash as $hash | $fileinfo[$hash][0] | $hash + " " + .name') \
     && FIREFOX_HASH="${FIREFOX_INFO%% *}" \
