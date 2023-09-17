@@ -26,6 +26,8 @@ jobs:
         with:
           ref: ${{ steps.extract-ref.outputs.ref }}
 
+      - run: git log
+
       - name: Generate Renovate app token
         id: renovate-app-token
         uses: tibdex/github-app-token@v2
