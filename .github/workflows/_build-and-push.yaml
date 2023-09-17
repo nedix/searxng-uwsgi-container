@@ -8,15 +8,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Extract ref
-        id: extract-ref
-        run: echo "ref=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
-
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: ${{ steps.extract-ref.outputs.ref }}
-          fetch-depth: 0
+          ref: ${{ github.event.repository.default_branch }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -31,8 +26,8 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Prepare digests
-        id: digests
+      - name: Prepare tags
+        id: tags
         run: |
           echo "DIGEST=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
           echo "SEARXNG_DIGEST=$(git log --oneline --no-merges | grep -o 'Update searxng digest to [0-9a-f]\{7\}' | awk '{print $NF}' | head -n 1)" >> $GITHUB_OUTPUT
@@ -45,6 +40,6 @@ jobs:
           push: true
           target: app
           tags: |
-            ghcr.io/${{ github.repository }}:${{ steps.digests.outputs.DIGEST }}
-            ghcr.io/${{ github.repository }}:searxng-${{ steps.digests.outputs.SEARXNG_DIGEST }}
+            ghcr.io/${{ github.repository }}:${{ steps.tags.outputs.DIGEST }}
+            ghcr.io/${{ github.repository }}:searxng-${{ steps.tags.outputs.SEARXNG_DIGEST }}
             ghcr.io/${{ github.repository }}:latest
