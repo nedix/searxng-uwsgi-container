@@ -17,8 +17,16 @@ jobs:
     needs:
       - cypress
     steps:
-      - name: Checkout
+      - name: Extract ref
+        id: extract-ref
+        run: echo "ref=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+
+      - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.extract-ref.outputs.ref }}
+
+      - run: git log
 
       - name: Generate Renovate app token
         id: renovate-app-token

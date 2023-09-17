@@ -6,38 +6,36 @@ on:
 jobs:
   cypress:
     runs-on: ubuntu-latest
-    services:
-      registry:
-        image: registry:2
-        ports:
-          - 5000:5000
 
     steps:
+      - name: Extract ref
+        id: extract-ref
+        run: echo "ref=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+
       - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Build app image
-        uses: docker/build-push-action@v4
+        uses: actions/checkout@v4
         with:
-          context: .
-          push: true
-          build-args: |
-            TARGET=app
-          tags: |
-            localhost:5000/app
+          ref: ${{ steps.extract-ref.outputs.ref }}
 
-      - name: Build test image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: true
-          build-args: |
-            TARGET=testing
-          tags: |
-            localhost:5000/cypress
-
-      - name: Run tests
+      - name: Build images and run e2e tests
         run: |
+          docker build . -t searx --progress plain --target app
+          docker build . -t searx-test --progress plain --target cypress
           docker network create test-network
-          docker run --rm --net test-network --name searx -d localhost:5000/app
-          docker run --rm --net test-network --name searx-test localhost:5000/cypress run
+          docker run --rm --net test-network --name searx -d searx
+          docker run --rm --net test-network --name searx-test -v ${PWD}/tests/e2e/artifacts/:/tests/e2e/artifacts/ searx-test run --browser firefox --reporter junit --reporter-options "mochaFile=artifacts/reports/junit-[hash].xml"
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          path: |
+            tests/e2e/artifacts
+        if: failure()
+
+      - name: Report test results
+        uses: dorny/test-reporter@v1
+        with:
+          name: test-results
+          path: tests/e2e/artifacts/reports/junit-*.xml
+          reporter: java-junit
+        if: success() || failure()
