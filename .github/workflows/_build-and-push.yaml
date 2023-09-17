@@ -29,7 +29,9 @@ jobs:
       - name: Prepare tags
         id: tags
         run: |
+          git fetch --all --tags
           echo "DIGEST=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+          echo "REF_NAME=$(git tag --points-at HEAD)" >> $GITHUB_OUTPUT
           echo "SEARXNG_DIGEST=$(git log --oneline --no-merges | grep -o 'Update searxng digest to [0-9a-f]\{7\}' | awk '{print $NF}' | head -n 1)" >> $GITHUB_OUTPUT
 
       - name: Build image and push to container registry
@@ -41,5 +43,6 @@ jobs:
           target: app
           tags: |
             ghcr.io/${{ github.repository }}:${{ steps.tags.outputs.DIGEST }}
+            ghcr.io/${{ github.repository }}:${{ steps.tags.outputs.REF_NAME }}
             ghcr.io/${{ github.repository }}:searxng-${{ steps.tags.outputs.SEARXNG_DIGEST }}
             ghcr.io/${{ github.repository }}:latest
