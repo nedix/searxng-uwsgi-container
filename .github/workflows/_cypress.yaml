@@ -6,11 +6,6 @@ on:
 jobs:
   cypress:
     runs-on: ubuntu-latest
-    services:
-      registry:
-        image: registry:2
-        ports:
-          - 5000:5000
 
     steps:
       - name: Extract ref
@@ -22,29 +17,13 @@ jobs:
         with:
           ref: ${{ steps.extract-ref.outputs.ref }}
 
-      - name: Build app image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: true
-          target: app
-          tags: |
-            localhost:5000/app
-
-      - name: Build test image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: true
-          target: cypress
-          tags: |
-            localhost:5000/cypress
-
-      - name: Run tests
+      - name: Build images and run e2e tests
         run: |
+          docker build . -t searx --progress plain --target app
+          docker build . -t searx-test --progress plain --target cypress
           docker network create test-network
-          docker run --rm --net test-network --name searx -d localhost:5000/app
-          docker run --rm --net test-network --name searx-test -v ${PWD}/tests/e2e/artifacts/:/tests/e2e/artifacts/ localhost:5000/cypress run --browser firefox --reporter junit --reporter-options "mochaFile=artifacts/reports/junit-[hash].xml"
+          docker run --rm --net test-network --name searx -d searx
+          docker run --rm --net test-network --name searx-test -v ${PWD}/tests/e2e/artifacts/:/tests/e2e/artifacts/ searx-test run --browser firefox --reporter junit --reporter-options "mochaFile=artifacts/reports/junit-[hash].xml"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
