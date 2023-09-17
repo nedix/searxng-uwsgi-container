@@ -5,16 +5,19 @@ down:
 	@-docker stop searx
 	@-docker stop searx-test
 
+shell:
+	@docker run --rm -it --entrypoint /bin/sh searx
+
 setup:
-	@make down
+	@-make down
 	@docker build . -t searx --target app
 
 test: spec =
 test:
 	@make test-setup
 	@docker run --rm --net searx-test --name searx -d searx
-	@-docker run --rm --net searx-test --name searx-test -v ${CURDIR}/tests/e2e/artifacts/:/tests/e2e/artifacts/ searx-test run --browser electron $(if ${spec},"--spec=integration/${spec}",)
-	@make down
+	@-docker run --rm --net searx-test --name searx-test -v $(CURDIR)/tests/e2e/artifacts/:/tests/e2e/artifacts/ searx-test run --browser firefox $(if $(spec),"--spec=integration/$(spec)",)
+	@-make down
 
 test-native:
 	@make test-setup
@@ -24,16 +27,16 @@ test-native:
 test-shell:
 	@make test-setup
 	@docker run --rm --net searx-test --name searx -d searx
-	@docker run --rm -it --net searx-test --entrypoint /bin/sh -v ${CURDIR}/tests/e2e/:/tests/e2e/ searx-test
+	@docker run --rm -it --net searx-test --entrypoint /bin/sh -v $(CURDIR)/tests/e2e/:/tests/e2e/ searx-test
 
 test-setup:
 	@make setup
-	@docker build . -t searx-test --target cypress
+	@docker build . -t searx-test --progress plain --target cypress
 	@docker network rm searx-test
 	@-docker network create searx-test
 
 test-update:
 	@make test-setup
 	@docker run --rm --net searx-test --name searx -d searx
-	@-docker run --rm --net searx-test --name searx-test -v ${CURDIR}/tests/e2e/snapshots/:/tests/e2e/snapshots searx-test run --browser electron --env updateSnapshots=true
-	@make down
+	@-docker run --rm --net searx-test --name searx-test -v $(CURDIR)/tests/e2e/snapshots/:/tests/e2e/snapshots searx-test run --browser firefox --env updateSnapshots=true
+	@#-make down
