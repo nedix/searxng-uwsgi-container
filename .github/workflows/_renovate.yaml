@@ -12,9 +12,16 @@ on:
 jobs:
   renovate:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Extract ref
+        id: extract-ref
+        run: echo "ref=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+
+      - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.extract-ref.outputs.ref }}
 
       - name: Generate Renovate app token
         id: renovate-app-token
@@ -33,6 +40,7 @@ jobs:
           token: ${{ steps.renovate-app-token.outputs.token }}
         env:
           RENOVATE_AUTODISCOVER: true
+          RENOVATE_AUTODISCOVER_FILTER: ${{ github.repository }}
           RENOVATE_AUTOMERGE: true
           RENOVATE_AUTOMERGE_STRATEGY: merge-commit
           RENOVATE_USE_BASE_BRANCH_CONFIG: merge

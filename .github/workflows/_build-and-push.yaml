@@ -8,10 +8,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Extract ref
+        id: extract-ref
+        run: echo "ref=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 50
+          ref: ${{ steps.extract-ref.outputs.ref }}
+          fetch-depth: 0
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -30,15 +35,15 @@ jobs:
         id: digests
         run: |
           echo "DIGEST=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
-          echo "SEARXNG_DIGEST=$(git log --grep='Update searxng digest to [0-9a-f]\{7\}' --oneline --no-merges | awk '{print $NF; exit}')" >> $GITHUB_OUTPUT
+          echo "SEARXNG_DIGEST=$(git log --oneline --no-merges | grep -o 'Update searxng digest to [0-9a-f]\{7\}' | awk '{print $NF}' | head -n 1)" >> $GITHUB_OUTPUT
 
       - name: Build image and push to container registry
         uses: docker/build-push-action@v4
         with:
           context: .
-          build-args: TARGET=app
           platforms: linux/amd64,linux/arm64
           push: true
+          target: app
           tags: |
             ghcr.io/${{ github.repository }}:${{ steps.digests.outputs.DIGEST }}
             ghcr.io/${{ github.repository }}:searxng-${{ steps.digests.outputs.SEARXNG_DIGEST }}
