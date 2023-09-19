@@ -6,6 +6,9 @@
   enabledManagers: [
     "regex",
   ],
+  prBodyNotes: [
+    "{{#if (equals depName 'searxng')}}[Compare changes](https://github.com/searxng/searxng/compare/{{currentDigestShort}}...{{newDigestShort}}){{/if}}"
+  ],
   regexManagers: [
     {
       fileMatch: ["^Dockerfile$"],
