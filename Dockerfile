@@ -1,4 +1,3 @@
-ARG ADVANCED_THEME_VERSION=0.1.3
 ARG ALPINE_VERSION=3.18
 ARG CYPRESS_IMAGE_SNAPSHOT_VERSION=8.1.2
 ARG CYPRESS_TERMINAL_REPORT_VERSION=5.3.6
@@ -23,17 +22,6 @@ RUN apk add --virtual .build-deps \
     && git checkout "$SEARXNG_VERSION" \
     && pip install --upgrade pip \
     && pip install --no-cache -r requirements.txt
-
-ARG ADVANCED_THEME_PATH=${SEARXNG_PATH}/searx/templates/advanced
-ARG ADVANCED_THEME_REPO=https://github.com/SatoshiGuacamole/searxng-advanced-theme.git
-ARG ADVANCED_THEME_VERSION
-
-RUN git clone "$ADVANCED_THEME_REPO" "$ADVANCED_THEME_PATH" \
-    && cd "$ADVANCED_THEME_PATH" \
-    && git checkout "$ADVANCED_THEME_VERSION" \
-    && rm -rf \
-        "${ADVANCED_THEME_PATH}/.git" \
-    && apk del .build-deps
 
 COPY --link rootfs /
 
