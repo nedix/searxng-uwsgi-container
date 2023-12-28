@@ -3,7 +3,6 @@ up:
 
 down:
 	@-docker stop searx
-	@-docker stop searx-test
 
 shell:
 	@docker exec searx
