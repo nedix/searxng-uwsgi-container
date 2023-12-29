@@ -27,5 +27,12 @@
       depNameTemplate: "cypress",
       packageNameTemplate: "cypress/included",
     }
-  ]
+  ],
+  packageRules: [
+    {
+      description: "Disable grouping for regex managed dependencies",
+      matchDepTypes: ["regex"],
+      groupName: null
+    }
+  ],
 }
