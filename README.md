@@ -1,3 +1,5 @@
+# [⚠️ Not for production ⚠️](https://github.com/nedix/searxng-uwsgi-docker/issues/30)
+
 # [searxng]-uwsgi-docker
 
 Automated builds of the SearxNG metasearch-engine. Tested to ensure that preferences do not change between builds.
