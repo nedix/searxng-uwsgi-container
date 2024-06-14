@@ -4,35 +4,35 @@
     "/^release\\/.*/",
   ],
   enabledManagers: [
-    "regex",
+    "custom.regex",
+    "github-actions",
   ],
   prBodyNotes: [
-    "{{#if (equals depName 'searxng')}}[Compare changes](https://github.com/searxng/searxng/compare/{{currentDigestShort}}...{{newDigestShort}}){{/if}}"
+    "{{#if (equals depName 'SearxNG')}}[Compare changes](https://github.com/searxng/searxng/compare/{{currentDigestShort}}...{{newDigestShort}}){{/if}}"
   ],
-  prFooter: "",
-  regexManagers: [
+  customManagers: [
     {
+      depNameTemplate: "SearxNG",
       fileMatch: ["^Dockerfile$"],
       matchStrings: ["ARG SEARXNG_VERSION=(?<currentDigest>.*?)\\n"],
       datasourceTemplate: "git-refs",
-      depNameTemplate: "searxng",
       packageNameTemplate: "https://github.com/searxng/searxng",
       versioningTemplate: "git",
       currentValueTemplate: "master",
     },
     {
+      depNameTemplate: "Cypress",
       fileMatch: ["^Dockerfile$"],
       matchStrings: ["ARG CYPRESS_VERSION=(?<currentValue>.*?)\\n"],
       datasourceTemplate: "docker",
-      depNameTemplate: "cypress",
       packageNameTemplate: "cypress/included",
-    }
+    },
   ],
   packageRules: [
     {
-      description: "Disable grouping for regex managed dependencies",
-      matchDepTypes: ["regex"],
-      groupName: null
-    }
+      description: "Disable grouping for all dependencies",
+      matchPackagePatterns: [".*"],
+      groupName: null,
+    },
   ],
 }
