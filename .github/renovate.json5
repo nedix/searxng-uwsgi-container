@@ -12,20 +12,13 @@
   ],
   customManagers: [
     {
-      depNameTemplate: "SearxNG",
+      depNameTemplate: "SearXNG",
       fileMatch: ["^Dockerfile$"],
       matchStrings: ["ARG SEARXNG_VERSION=(?<currentDigest>.*?)\\n"],
       datasourceTemplate: "git-refs",
       packageNameTemplate: "https://github.com/searxng/searxng",
       versioningTemplate: "git",
       currentValueTemplate: "master",
-    },
-    {
-      depNameTemplate: "Cypress",
-      fileMatch: ["^Dockerfile$"],
-      matchStrings: ["ARG CYPRESS_VERSION=(?<currentValue>.*?)\\n"],
-      datasourceTemplate: "docker",
-      packageNameTemplate: "cypress/included",
     },
   ],
   packageRules: [
