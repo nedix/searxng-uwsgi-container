@@ -54,7 +54,7 @@ jobs:
           echo "SEARXNG_DIGEST=$(git log --oneline --no-merges | grep -o 'Update searxng digest to [0-9a-f]\{7\}' | awk '{print $NF}' | head -n 1)" >> $GITHUB_OUTPUT
 
       - name: Update package
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           platforms: linux/amd64,linux/arm64/v8
