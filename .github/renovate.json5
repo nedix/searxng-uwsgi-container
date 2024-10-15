@@ -4,6 +4,13 @@
   ],
   customManagers: [
     {
+      depNameTemplate: "Alpine",
+      fileMatch: ["^Dockerfile$"],
+      matchStrings: ["ARG ALPINE_VERSION=(?<currentValue>.*?)\\n"],
+      datasourceTemplate: "docker",
+      packageNameTemplate: "alpine",
+    },
+    {
       depNameTemplate: "SearXNG",
       fileMatch: ["^Dockerfile$"],
       matchStrings: ["ARG SEARXNG_VERSION=(?<currentDigest>.*?)\\n"],
@@ -11,6 +18,13 @@
       packageNameTemplate: "https://github.com/searxng/searxng",
       versioningTemplate: "git",
       currentValueTemplate: "master",
+    },
+    {
+      depNameTemplate: "Python",
+      fileMatch: ["^Dockerfile$"],
+      matchStrings: ["ARG PYTHON_VERSION=(?<currentValue>.*?)\\n"],
+      datasourceTemplate: "docker",
+      packageNameTemplate: "python"
     },
   ],
   prBodyNotes: [
