@@ -13,7 +13,7 @@ This example command will start the server on port `80`.
 ```shell
 docker run --pull always --rm --name searx \
     -p 80:1234 \
-    -d ghcr.io/nedix/searxng-uwsgi-docker
+    -d ghcr.io/nedix/searxng-uwsgi-container
 ```
 
 <hr>
