@@ -1,14 +1,6 @@
 {
-  baseBranches: [
-    "main",
-    "/^release\\/.*/",
-  ],
-  enabledManagers: [
-    "custom.regex",
-    "github-actions",
-  ],
-  prBodyNotes: [
-    "{{#if (equals depName 'SearxNG')}}[Compare changes](https://github.com/searxng/searxng/compare/{{currentDigestShort}}...{{newDigestShort}}){{/if}}"
+  extends: [
+    "https://raw.githubusercontent.com/nedix/actions/main/renovate.json5",
   ],
   customManagers: [
     {
@@ -21,11 +13,7 @@
       currentValueTemplate: "master",
     },
   ],
-  packageRules: [
-    {
-      description: "Disable grouping for all dependencies",
-      matchPackagePatterns: [".*"],
-      groupName: null,
-    },
+  prBodyNotes: [
+    "{{#if (equals depName 'SearxNG')}}[Compare changes](https://github.com/searxng/searxng/compare/{{currentDigestShort}}...{{newDigestShort}}){{/if}}"
   ],
 }
