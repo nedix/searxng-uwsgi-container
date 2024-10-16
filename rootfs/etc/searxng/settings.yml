@@ -9,7 +9,7 @@ server:
   image_proxy: true
 
 ui:
-  default_theme: custom
+  default_theme: simple
   advanced_search: true
   results_on_new_tab: true
   infinite_scroll: true
