@@ -5,7 +5,7 @@ general:
 
 server:
   secret_key: "secret"
-  port: 1234
+  port: 80
   image_proxy: true
 
 ui:

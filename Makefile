@@ -1,5 +1,5 @@
 up:
-	@docker run --rm -p 1234:1234 --name searx -d searx
+	@docker run --rm -p 8080:80 --name searxng -d searxng
 
 down:
 	@-docker stop searx
