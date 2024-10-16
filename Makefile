@@ -1,13 +1,10 @@
+setup:
+	@-make down
+	@docker build --progress plain -f Containerfile -t searx .
+
 up:
 	@docker run --rm -p 8080:80 --name searxng -d searxng
 
 down:
-	@-docker stop searx
-	@-docker stop searx-test
-
-shell:
-	@docker exec searx
-
-setup:
-	@-make down
-	@docker build . -t searx --progress plain
+	@-docker stop searxng
+	@-docker stop searxng-test

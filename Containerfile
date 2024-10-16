@@ -6,8 +6,6 @@ ARG SEARXNG_VERSION=058a072404a4e9ec4c5a0a957fe06ce66e652938
 
 FROM python:${PYTHON_VERSION}-alpine${ALPINE_VERSION}
 
-ARG SEARXNG_PATH=/usr/local/searxng
-ARG SEARXNG_REPO=https://github.com/searxng/searxng.git
 ARG SEARXNG_VERSION
 
 RUN apk add --virtual .build-deps \
@@ -15,32 +13,21 @@ RUN apk add --virtual .build-deps \
     && apk add \
         git \
         uwsgi-python3 \
-    && git clone "$SEARXNG_REPO" "$SEARXNG_PATH" \
-    && cd "$SEARXNG_PATH" \
+    && git clone https://github.com/searxng/searxng.git /usr/local/searxng \
+    && cd /usr/local/searxng \
     && git checkout "$SEARXNG_VERSION" \
     && pip install --upgrade pip \
     && pip install --no-cache -r requirements.txt
 
-ARG ADVANCED_THEME_PATH=${SEARXNG_PATH}/searx/templates/advanced
-ARG ADVANCED_THEME_REPO=https://github.com/SatoshiGuacamole/searxng-advanced-theme.git
-ARG ADVANCED_THEME_VERSION
-
-RUN git clone "$ADVANCED_THEME_REPO" "$ADVANCED_THEME_PATH" \
-    && cd "$ADVANCED_THEME_PATH" \
-    && git checkout "$ADVANCED_THEME_VERSION" \
-    && rm -rf \
-        "${ADVANCED_THEME_PATH}/.git" \
-    && apk del .build-deps
-
 COPY --link rootfs /
 
 RUN chown -R nobody \
-        "$SEARXNG_PATH" \
+        "/usr/local/searxng" \
         /var/log/uwsgi/ \
     && chmod +x /entrypoint.sh
 
 USER nobody
 
-EXPOSE 1234
+EXPOSE 80
 
 ENTRYPOINT ["/entrypoint.sh"]
