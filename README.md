@@ -8,11 +8,11 @@ SearxNG metasearch-engine.
 
 #### Start the server
 
-This example command will start the server on port `80`.
+This example command will start the server on port `8080`.
 
 ```shell
 docker run --pull always --rm --name searx \
-    -p 80:1234 \
+    -p 8080:80 \
     -d nedix/searxng
 ```
 
