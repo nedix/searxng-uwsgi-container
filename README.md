@@ -2,19 +2,26 @@
 
 # [searxng-container](https://github.com/nedix/searxng-container)
 
-SearxNG metasearch-engine.
+Metasearch-engine to combine the search results from multiple providers.
 
 ## Usage
 
-#### Start the server
+#### 1. Start the server
 
 This example command will start the server on port `8080`.
 
 ```shell
 docker run --pull always --rm --name searxng \
     -p 8080:80 \
-    -d nedix/searxng
+    -d \
+    nedix/searxng
 ```
+
+#### 2. Start searching
+
+- Navigate to SearxNG on http://127.0.0.1:8080
+- Type a search query
+- Press enter or click the search button
 
 <hr>
 
