@@ -3,7 +3,10 @@ setup:
 
 up: PORT = 8080
 up:
-	@docker run --rm -p $(PORT):80 --name searxng -d searxng
+	@docker run --rm --name searxng \
+		-p 127.0.0.1:$(PORT):80 \
+		-d \
+		searxng
 
 down:
 	@-docker rm -fv searxng
