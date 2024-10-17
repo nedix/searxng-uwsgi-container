@@ -1,6 +1,4 @@
-ARG ADVANCED_THEME_VERSION=0.1.3
 ARG ALPINE_VERSION=3.20
-ARG FIREFOX_VERSION=117.0.1-1
 ARG PYTHON_VERSION=3.12
 ARG SEARXNG_VERSION=038a2ff6bd3d610d9dac6bcd029827b215e9c5c1
 
@@ -17,16 +15,15 @@ RUN apk add --virtual .build-deps \
     && cd /usr/local/searxng \
     && git checkout "$SEARXNG_VERSION" \
     && pip install --upgrade pip \
-    && pip install --no-cache -r requirements.txt
+    && pip install --no-cache -r requirements.txt \
+    && apk del .build-deps
 
 COPY --link rootfs /
 
 RUN chown -R nobody \
-        "/usr/local/searxng" \
+        /usr/local/searxng \
         /var/log/uwsgi/ \
     && chmod +x /entrypoint.sh
-
-USER nobody
 
 EXPOSE 80
 
