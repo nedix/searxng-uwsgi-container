@@ -2,7 +2,7 @@
 
 # [searxng-container](https://github.com/nedix/searxng-container)
 
-Metasearch-engine that combines search results from multiple sources.
+Metasearch-engine to combine search results from multiple sources.
 
 ## Usage
 
